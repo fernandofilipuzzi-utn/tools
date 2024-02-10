@@ -92,8 +92,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="img\logo_utn.jpg" />
-    <Content Include="img\logo_wifi.jpg" />
+    <Content Include="img\copy_paste.png" />
     <Content Include="template\AndroidManifest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

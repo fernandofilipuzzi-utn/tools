@@ -9,12 +9,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
+using Image = System.Drawing.Image;
 
 namespace GeneradorIconosApp
 {
     public partial class FormPrincipal : Form
     {
-        string pathImagenOrigen = "";
+        Image imagen = null;
+        Image imagenEditada = null;
+
         public FormPrincipal()
         {
             InitializeComponent();
@@ -24,8 +28,9 @@ namespace GeneradorIconosApp
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                pictureBox1.Image=Image.FromFile(openFileDialog1.FileName);
-                pathImagenOrigen= openFileDialog1.FileName;
+                imagen = Image.FromFile(openFileDialog1.FileName);
+                imagenEditada = imagen;
+                pictureBox1.Image = imagen;
             }
         }
 
@@ -34,11 +39,10 @@ namespace GeneradorIconosApp
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 string pathDestino = folderBrowserDialog1.SelectedPath;
-                Armador armador = new Armador(pathImagenOrigen, pathDestino);
+                Armador armador = new Armador(imagenEditada, pathDestino);
+                armador.MargenPorc = Convert.ToDouble(numericUpDown1.Value);
                 armador.GenerarFicheros();
             }
-
-
         }
 
         private void pbColor_Click(object sender, EventArgs e)
@@ -52,31 +56,35 @@ namespace GeneradorIconosApp
             }
         }
 
-        private void pbBackColor_Click(object sender, EventArgs e)
-        {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (sender == pbColor)
-                    pbColor.BackColor = colorDialog1.Color;
-                else
-                    pbBackColor.BackColor = colorDialog1.Color;
-            }
-        }
-
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            /*
-            if (qrCodeImage != null)
+            if (pictureBox1.Image != null)
             {
-                Bitmap opaqueImage = new Bitmap(qrCodeImage.Width, qrCodeImage.Height);
+                Bitmap opaqueImage = new Bitmap(pictureBox1.Image);
                 using (Graphics g = Graphics.FromImage(opaqueImage))
                 {
-                    g.Clear(Color.White);
-                    g.DrawImage(qrCodeImage, 0, 0);
                     Clipboard.SetImage(opaqueImage);
                 }
             }
-            */
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                Bitmap ImagenOpaca = new Bitmap(imagen);
+                using (Graphics g = Graphics.FromImage(ImagenOpaca))
+                {
+                    g.Clear(pbBackColor.BackColor);
+                    g.DrawImage(imagen, 0, 0);
+                    pictureBox1.Image = ImagenOpaca;
+                }
+            }
+            else
+            {
+                imagenEditada = imagen;
+                pictureBox1.Image = imagen;
+            }
         }
     }
 }

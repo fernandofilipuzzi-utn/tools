@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.NetworkInformation;
 using System.Security.Policy;
 using System.Text;
@@ -16,33 +17,36 @@ namespace GeneradorIconosApp
     {
         public string DirectorioDestino;
         Image imagenSeleccionada;
+        public double MargenPorc { get; set; }= 10;
 
-        public Armador(string pathImagenOrigen,string pathDestino)
+        public Armador(Image imagenOrigen,string pathDestino)
         {
             DirectorioDestino = pathDestino;
-            imagenSeleccionada=Image.FromFile(pathImagenOrigen);
+            imagenSeleccionada= imagenOrigen;
         }
 
         public void GenerarFicheros()
         {
+            ClearFiles();
             CrearAppIcon();
             CrearMipmapAnydpiV26();
             CrearMips();
             CrearResources();
+            CrearFicherosAdicionales();
+        }
 
-            List<string> ficheros=new List<string>{
-                "Info.plist",
-                "AndroidManifest.xml",
-                "AssemblyInfo.cs",
-            };
-            string pathDirOrigen = Path.GetFullPath("template");
-            copiarFicheros(ficheros, pathDirOrigen, DirectorioDestino);
-
-            List<dynamic> imagenes = new List<dynamic>{
-                new {Nombre="appstore.png", Ancho=1024, Alto=1024 },
-                new {Nombre="playstore.png", Ancho=512, Alto=512 },
-            };
-            crearImagenes(imagenes, DirectorioDestino);
+        private void ClearFiles()
+        {
+            string [] listaFiles = Directory.GetFiles(DirectorioDestino);
+            foreach (string path in listaFiles)
+            {
+                File.Delete(path);             
+            }
+            string[] listaDirectories = Directory.GetDirectories(DirectorioDestino);
+            foreach (string path in listaDirectories)
+            {
+                Directory.Delete(path, true);
+            }
         }
 
         private void CrearAppIcon()
@@ -92,21 +96,56 @@ namespace GeneradorIconosApp
         }
         private void crearImagenes(List<dynamic> targets, string pathDirDestino)
         {
-            double margenPorc = 0;
             foreach (var img in targets)
             {
-                margenPorc = 10;
-                int ancho = (int)(img.Ancho - margenPorc * 2 * img.Ancho / 100.0);
-                int alto = (int)(img.Alto - margenPorc * 2 * img.Alto / 100.0);
-                int x = (int)Math.Floor(margenPorc * img.Ancho / 100.0);
-                int y = (int)Math.Floor(margenPorc * img.Alto / 100.0);
+                #region escalado de los limites de la imagen
+                double imgAncho =img.Ancho;
+                double imgAlto = img.Alto;
+                double relacionIcono= imgAncho / imgAlto;
+                if (relacionIcono > 1)
+                {
+                    imgAncho = imgAncho/relacionIcono;
+                }
+                else
+                {
+                    imgAlto = imgAlto* relacionIcono;
+                }
+                #endregion
 
+                #region  reducción segun el margen 
+                int ancho = (int)(imgAncho - MargenPorc / 100.0 * 2 * imgAncho);
+                int alto = (int)(imgAlto - MargenPorc / 100.0 * 2 * imgAlto);
+                int x = (int)Math.Floor(MargenPorc / 100.0 * img.Ancho);
+                int y = (int)Math.Floor(MargenPorc / 100.0 * img.Alto );
+                #endregion
+
+                #region area de dibujo
                 Bitmap resizedImage = new Bitmap(img.Ancho, img.Alto);
                 Graphics g = Graphics.FromImage(resizedImage);
-                g.DrawImage(imagenSeleccionada, x, y, ancho, alto);
+                #endregion
+
+                #region rescalado de la imagen
+                int anchoImagen = imagenSeleccionada.Width;
+                int altoImagen = imagenSeleccionada.Height;
+                double relacion = anchoImagen*1.0/ altoImagen;
+
+                if (anchoImagen > 1)
+                {
+                    int anchoEscalado = (int)(ancho / relacion);
+                    int xp = x/2+(img.Ancho/2- anchoEscalado/2)/2;
+                    g.DrawImage(imagenSeleccionada, xp, y, anchoEscalado, alto);
+                }
+                else
+                {
+                    int altoEscalado = (int)(alto * relacion);
+                    int yp =  y/2+(img.Alto / 2 - altoEscalado / 2) / 2;
+                    g.DrawImage(imagenSeleccionada, x, yp, ancho, altoEscalado);
+                }
+                #endregion
 
                 string destino = Path.GetFullPath(Path.Combine(pathDirDestino, img.Nombre));
                 resizedImage.Save(destino, ImageFormat.Png);
+                
                 g.Dispose();
                 resizedImage.Dispose();
             }
@@ -187,6 +226,24 @@ namespace GeneradorIconosApp
                 new {Nombre="Default-Portrait@2x.png", Ancho=1536, Alto=2008},
             };
             return targets;
+        }
+
+        private void CrearFicherosAdicionales()
+        {
+            List<string> ficheros = new List<string>
+            {
+                "Info.plist",
+                "AndroidManifest.xml",
+                "AssemblyInfo.cs",
+            };
+            string pathDirOrigen = Path.GetFullPath("template");
+            copiarFicheros(ficheros, pathDirOrigen, DirectorioDestino);
+
+            List<dynamic> imagenes = new List<dynamic>{
+                new {Nombre="appstore.png", Ancho=1024, Alto=1024 },
+                new {Nombre="playstore.png", Ancho=512, Alto=512 },
+            };
+            crearImagenes(imagenes, DirectorioDestino);
         }
     }
 }

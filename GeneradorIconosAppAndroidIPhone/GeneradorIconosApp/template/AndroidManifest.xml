@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="22" android:versionName="1.3.1" package="com.MOVPARKDesarrollo.Ciudadano" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="22" android:versionName="1.3.1" package="com.PROYECTOAmbiente.Usuario" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="22" android:targetSdkVersion="33" />
-	<application android:label="MovilParking Desarollo Ciudadano" android:theme="@style/MainTheme" android:usesCleartextTraffic="true">
+	<application android:label="Proyecto Ambiente Usuario" android:theme="@style/MainTheme" android:usesCleartextTraffic="true">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
 		</provider>
