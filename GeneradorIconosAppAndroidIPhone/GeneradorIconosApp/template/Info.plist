@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>MinimumOSVersion</key>
+	<string>9.0</string>
+	<key>CFBundleDisplayName</key>
+	<string>MovilParking Desarrollo Ciudadano</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MOVPARKDesarrollo.Ciudadano</string>
+	<key>CFBundleVersion</key>
+	<string>6.0</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>CFBundleName</key>
+	<string>APPNotions</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>UIStatusBarHidden</key>
+	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>We will implement an interactive map, to show the user points of interest related to the municipal management.</string>
+		<key>NSCalendarsUsageDescription</key>
+		<string>Calendar is required to set appointment reminders in the municipality</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We use the camera so that users can attach photos of the claims they are making.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>We use the camera so that users can attach photos of the claims they are making.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>We will implement an interactive map, to show the user points of interest related to the municipal management.</string>
+
+		<key>NSMicrophoneUsageDescription</key>
+		<string>This app does not require access to the microphone.</string>
+
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>We use the camera so that users can attach photos of the claims they are making.</string>
+	</dict>
+</plist>
